@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ufwb version="1.6">
+    <grammar name="ITC grammar" start="id:7" author="Ivan Moscoso" fileextension="itc">
+        <description>Grammar for ITC files</description>
+        <scripts>
+            <script name="PreambleType" type="Generic" id="41">
+                <source language="Python">print &quot;Generic Python Script did run&quot;
+</source>
+            </script>
+        </scripts>
+        <structure name="ITC file" id="7" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <structref name="FirstFrame" id="9" fillcolor="000000" structure="id:8"/>
+            <structref name="Item" id="11" fillcolor="000000" repeatmax="-1" structure="id:10"/>
+        </structure>
+        <structure name="ITCH Frame" id="8" length="FrameSize" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FrameSize" id="13" fillcolor="248E3A" type="integer" length="4">
+                <description>The size (in bytes) of this frame</description>
+            </number>
+            <string name="FrameType" id="14" fillcolor="B9FCDF" type="fixed-length" length="4" encoding="ISO_8859-1:1987">
+                <description>'itch' or 'item'</description>
+            </string>
+            <binary name="offset1" id="15" fillcolor="F8E1CF" length="16"/>
+            <string name="artw" id="16" fillcolor="E1DDD0" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <binary name="data" id="17" fillcolor="BDB9B0" length="remaining"/>
+        </structure>
+        <structure name="ITEM Frame" id="10" length="FrameSize" encoding="ISO_8859-1:1987" endian="big" signed="no">
+            <number name="FrameSize" id="19" fillcolor="248E3A" type="integer" length="4"/>
+            <string name="FrameType" id="20" fillcolor="B9FCDF" type="fixed-length" length="4" encoding="ISO_8859-1:1987"/>
+            <structref name="ImageOffset" id="22" structure="id:21"/>
+            <number name="LibraryID" id="23" fillcolor="F2F2E4" repeatmin="0" type="integer" length="8" display="hex"/>
+            <number name="TrackID" id="24" fillcolor="F2F2E4" repeatmin="0" type="integer" length="8" display="hex"/>
+            <string name="Method" id="25" type="fixed-length" length="4"/>
+            <binary name="Format" id="26" length="4">
+                <fixedvalues>
+                    <fixedvalue name="PNG" value="0000000E"/>
+                    <fixedvalue name="ARGb" value="41524762"/>
+                    <fixedvalue name="JPEG" value="0000000D"/>
+                </fixedvalues>
+            </binary>
+            <binary name="skip" id="27" length="4"/>
+            <number name="Width" id="28" type="integer" length="4"/>
+            <number name="Height" id="29" type="integer" length="4"/>
+            <structure name="Undefined" id="30" length="0">
+                <binary name="padding" id="31" strokecolor="DBDBDB" length="140"/>
+                <string name="identifier" mustmatch="yes" id="32" type="fixed-length" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="data"/>
+                    </fixedvalues>
+                </string>
+            </structure>
+            <structref name="ImageData" id="272" structure="id:34"/>
+        </structure>
+        <structure name="ImageData" id="34" length="FrameSize - imageOffset" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <binary name="ImageData" id="38" fillcolor="EDF2E0" length="remaining"/>
+        </structure>
+        <structure name="ImageOffset" id="21" encoding="ISO_8859-1:1987" endian="big" signed="no" order="variable">
+            <structure name="iTunes9_Preamble" id="40">
+                <number name="imageOffset" id="41" fillcolor="FFF66C" type="integer" length="4">
+                    <fixedvalues>
+                        <fixedvalue value="208"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Preamble" id="42" fillcolor="E4E2E6" repeatmin="0" length="16"/>
+            </structure>
+            <structure name="iTunesOLD_Preamble" id="44" length="0">
+                <number name="imageOffset" mustmatch="yes" id="45" fillcolor="FFF66C" type="integer" length="4">
+                    <description>The iTunes 9+ image offset is 208 bytes.
+The previous iTunes image offset is 216 bytes.</description>
+                    <fixedvalues>
+                        <fixedvalue value="216"/>
+                    </fixedvalues>
+                </number>
+                <binary name="Preamble" id="46" fillcolor="E4E2E6" repeatmin="0" length="20"/>
+            </structure>
+        </structure>
+    </grammar>
+</ufwb>
